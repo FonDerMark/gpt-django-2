@@ -3,11 +3,9 @@ from gpt4free import Provider, quora
 import gpt4free
 from os import environ as env
 
-# default_gpt_mode = env['GPT_MODE']
-default_gpt_mode = 'theb'
 
 
-def request_to_gpt(question, mode=default_gpt_mode):
+def request_to_gpt(question, mode):
     response = ''
     while response == '':
         response = {

@@ -4,9 +4,15 @@ from .models import TelegramUser
 import datetime
 import json
 from django.views.decorators.csrf import csrf_exempt
+import dotenv
+from os import environ as env
 
 
 from .request_to_gpt import request_to_gpt
+
+dotenv.load_dotenv()
+
+DEFAULT_GPT_MODE = env.get('DEFAULT_GPT_MODE', 'theb')
 
 @csrf_exempt
 def status(request):
@@ -21,24 +27,26 @@ def status(request):
 @csrf_exempt
 def answer(request):
     user = _get_or_create_user(request)
+    # Если передан параметр 'gpt_mode', применить его
+    gpt_mode = request.POST.get('gpt_mode', DEFAULT_GPT_MODE)
     question = json.loads(request.POST['all_data'])['text']
     # Проверка даты последнего начисления запросов
     if user.day_limit == datetime.date.today():
         # Если суточных запросов > 0:
         if user.day_limit_of_messages > 0:
-            _answer = request_to_gpt(question)
+            _answer = request_to_gpt(question, gpt_mode)
             user.day_limit_of_messages -= 1
             user.save()
         # Если остались экстразапросы
         elif user.extra_messages > 0:
-            _answer = request_to_gpt(question)
+            _answer = request_to_gpt(question, gpt_mode)
             user.extra_messages -= 1
             user.save()
         else:
             _answer = 'Вы исчерпали лимит сообщений'
     # В случае нового дня
     else:
-        _answer = request_to_gpt(question)
+        _answer = request_to_gpt(question, gpt_mode)
         user.extra_messages = 9
         user.day_of_limit = datetime.date.today()
         user.save()
