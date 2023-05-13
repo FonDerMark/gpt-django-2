@@ -60,15 +60,19 @@ def _get_or_create_user(request):
     user, created = TelegramUser.objects.get_or_create(user_id=user_data['id'])
     try:
         user.username = user_data['username']
-        user.firstname = user_data['first_name']
-        user.lastname = user_data['last_name']
-    finally:
-        if created:
-            user.day_limit_of_messages = 10
-            user.day_limit = datetime.date.today()
-            user.extra_messages = 0
-        user.save()
-        return user
+    except:
+        try:
+            user.firstname = user_data['first_name']
+        except:
+            try:
+                user.lastname = user_data['last_name']
+            finally:
+                if created:
+                    user.day_limit_of_messages = 10
+                    user.day_limit = datetime.date.today()
+                    user.extra_messages = 0
+                user.save()
+                return user
 
 
 class MyJSONEncoder(DjangoJSONEncoder):
