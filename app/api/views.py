@@ -48,7 +48,7 @@ def answer(request):
     else:
         _answer = request_to_gpt(question, gpt_mode)
         user.extra_messages = 9
-        user.day_of_limit = datetime.date.today()
+        user.day_limit = datetime.date.today()
         user.save()
     data = {
         'answer': _answer,
