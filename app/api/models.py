@@ -14,15 +14,10 @@ class TelegramUser(models.Model):
     def __str__(self) -> str:
         return f'{self.username}({self.user_id})/limit:{self.day_limit_of_messages}'
     
-
-class Products:
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    price = models.IntegerField()
-    
     
 class Payments(models.Model):
+    product = models.CharField(max_length=100)
     user = models.ForeignKey(TelegramUser, null=True, on_delete=models.SET_NULL)
-    product = models.ForeignKey(Products, null=True, on_delete=models.SET_NULL)
-    datetime = models.DateTimeField()
+    price = models.IntegerField()
+    datetime = models.DateTimeField(auto_now_add=True)
     key = models.CharField(max_length=1000, db_index=True)
