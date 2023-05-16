@@ -11,7 +11,7 @@ from .request_to_gpt import request_to_gpt
 
 dotenv.load_dotenv()
 
-DEFAULT_GPT_MODE = env.get('DEFAULT_GPT_MODE', 'theb')
+DEFAULT_GPT_MODE = env['DEFAULT_GPT_MODE']
 AES_SECRET_KEY = env['AES_SECRET_KEY'].encode('iso-8859-1')
 
 @csrf_exempt
