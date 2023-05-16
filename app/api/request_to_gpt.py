@@ -7,7 +7,8 @@ from os import environ as env
 
 def request_to_gpt(question, mode):
     response = ''
-    while response == '':
+    count = 10
+    while response == '' and count > 0:
         response = {
             'you': lambda: gpt4free.Completion.create(Provider.You, prompt=question).encode().decode('unicode_escape'),
             'poe': lambda: gpt4free.Completion.create(Provider.Poe, prompt=question,
@@ -16,4 +17,8 @@ def request_to_gpt(question, mode):
                                                             token=quora.Account.create(logging=False)),
             'theb': lambda: gpt4free.Completion.create(Provider.Theb, prompt=question),
         }.get(mode)()
-    return response
+        count -= 1
+    if response == '':
+        return 'Service overloaded, try later'
+    else:
+        return response
