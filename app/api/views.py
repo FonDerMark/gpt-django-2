@@ -9,10 +9,12 @@ from Crypto.Cipher import AES
 from .models import TelegramUser, Payments
 from .request_to_gpt import request_to_gpt
 
+
 dotenv.load_dotenv()
 
 DEFAULT_GPT_MODE = env['DEFAULT_GPT_MODE']
 AES_SECRET_KEY = env['AES_SECRET_KEY'].encode('iso-8859-1')
+
 
 @csrf_exempt
 def status(request):
@@ -24,10 +26,12 @@ def status(request):
     }
     return JsonResponse(data)
 
+
 @csrf_exempt
 def precheckout(request):
     return JsonResponse({'precheckout': True})
     
+
 @csrf_exempt
 def payment(request):
     user = Service.get_or_create_user(request)
@@ -47,7 +51,6 @@ def payment(request):
     # TODO 
 
 
-
 @csrf_exempt
 def payments(request):
     if request.method == 'POST':
@@ -58,6 +61,7 @@ def payments(request):
             'username': user.username,
         }
         return JsonResponse(data)
+
 
 @csrf_exempt
 def answer(request):
@@ -96,6 +100,7 @@ def answer(request):
         except:
             user.day_limit_of_messages += 1
             user.save()
+
 
 class Service:
     
