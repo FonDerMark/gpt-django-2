@@ -1,31 +1,10 @@
 version: '3'
 services:
-  web:
-    env_file:
-    - .env
-    build: ./app
-    command: gunicorn main.wsgi:application --bind 0.0.0.0:8001
-    ports:
-      - 8001:8001
-    depends_on:
-      - db
   bot:
     env_file:
     - .env
     build: ./bot
     ports:
       - 16000:16000
-    depends_on:
-      - db
-  db:
-    image: postgres:latest
-    volumes:
-      - db:/home/storage
-    env_file:
-      - .env
-    environment:
-      - POSTGRES_USER=$DB_USER
-      - POSTGRES_PASSWORD=$DB_PASSWORD
-      - POSTGRES_DB=$DB_NAME
-volumes:
-  db:
+    command: sh -c "pip install -r requirements.txt && python bot.py"
+
